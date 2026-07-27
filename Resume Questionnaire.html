@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AI Remote Work – Resume Builder Intake</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg1: #ffb347;
+      --bg2: #ffcc33;
+      --bg3: #4dd0e1;
+      --bg4: #00bcd4;
+      --card-bg: #ffffffee;
+      --accent: #ff9800;
+      --accent2: #00bcd4;
+      --accent3: #009688;
+      --text-main: #222;
+      --text-muted: #555;
+      --border-soft: #e0e0e0;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --radius-sm: 8px;
+      --shadow-soft: 0 18px 50px rgba(0, 0, 0, 0.16);
+      --font-main: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font-main);
+      background: radial-gradient(circle at top left, var(--bg1), var(--bg2), var(--bg3), var(--bg4));
+      background-size: 200% 200%;
+      animation: bgShift 20s ease-in-out infinite;
+      color: var(--text-main);
+    }
+
+    @keyframes bgShift {
+      0% { background-position: 0% 0%; }
+      50% { background-position: 100% 100%; }
+      100% { background-position: 0% 0%; }
+    }
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      padding: 32px 16px;
+    }
+
+    .shell {
+      width: 100%;
+      max-width: 1200px;
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1.4fr);
+      gap: 22px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-soft);
+      padding: 26px 24px 30px;
+      backdrop-filter: blur(10px);
+    }
+
+    .header {
+      text-align: left;
+      margin-bottom: 18px;
+    }
+
+    .title {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      color: #1a1a1a;
+    }
+
+    .subtitle {
+      margin-top: 8px;
+      font-size: 0.98rem;
+      color: var(--text-muted);
+    }
+
+    .subtitle span.fun {
+      color: var(--accent3);
+      font-weight: 600;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .pill {
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      background: rgba(0, 188, 212, 0.12);
+      color: #006064;
+      border: 1px solid rgba(0, 188, 212, 0.4);
+    }
+
+    .pill.highlight {
+      background: rgba(255, 152, 0, 0.14);
+      color: #e65100;
+      border-color: rgba(255, 152, 0, 0.5);
+    }
+
+    form {
+      margin-top: 10px;
+    }
+
+    .section {
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-soft);
+      padding: 18px 16px 20px;
+      margin-bottom: 18px;
+      background: #ffffff;
+      position: relative;
+    }
+
+    .section::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 4px;
+      border-radius: var(--radius-md) 0 0 var(--radius-md);
+      background: linear-gradient(180deg, var(--accent), var(--accent2));
+    }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      gap: 10px;
+    }
+
+    .section-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+
+    .section-note {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-align: right;
+    }
+
+    .section-note span {
+      color: var(--accent3);
+      font-weight: 600;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 12px 18px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.86rem;
+      font-weight: 500;
+      margin-bottom: 4px;
+      color: #333;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 9px 10px;
+      border-radius: 7px;
+      border: 1px solid #d0d0d0;
+      font-size: 0.9rem;
+      font-family: var(--font-main);
+      transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+      background: #fafafa;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--accent2);
+      box-shadow: 0 0 0 2px rgba(0, 188, 212, 0.25);
+      background: #ffffff;
+    }
+
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .checkbox-group,
+    .radio-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 14px;
+      margin-top: 4px;
+    }
+
+    .checkbox-item,
+    .radio-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .checkbox-item input,
+    .radio-item input {
+      transform: scale(1.05);
+    }
+
+    .hint {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .hint.fun {
+      color: var(--accent3);
+    }
+
+    .footer {
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .submit-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .submit-btn {
+      border: none;
+      border-radius: 999px;
+      padding: 11px 26px;
+      font-size: 0.98rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      cursor: pointer;
+      color: #fff;
+      background: linear-gradient(135deg, #ff9800, #ff5722, #ffb300);
+      box-shadow: 0 10px 24px rgba(255, 152, 0, 0.45);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
+    }
+
+    .submit-btn span.icon {
+      font-size: 1.1rem;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.05);
+      box-shadow: 0 14px 30px rgba(255, 152, 0, 0.55);
+    }
+
+    .submit-btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 6px 16px rgba(255, 152, 0, 0.4);
+    }
+
+    .success-message {
+      display: none;
+      font-size: 0.9rem;
+      color: #1b5e20;
+      background: #e8f5e9;
+      border-radius: 999px;
+      padding: 8px 14px;
+      border: 1px solid #c8e6c9;
+    }
+
+    .success-message.visible {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .success-message span.icon {
+      font-size: 1rem;
+    }
+
+    .small-note {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    /* Resume preview panel */
+    .resume-card {
+      background: #101827;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-soft);
+      padding: 22px 20px 24px;
+      color: #f9fafb;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .resume-card::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background: radial-gradient(circle at top right, rgba(255, 152, 0, 0.18), transparent 60%),
+                  radial-gradient(circle at bottom left, rgba(0, 188, 212, 0.18), transparent 60%);
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .resume-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .resume-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.4);
+      padding-bottom: 10px;
+    }
+
+    .resume-name {
+      font-size: 1.4rem;
+      font-weight: 700;
+    }
+
+    .resume-role {
+      font-size: 0.9rem;
+      color: #e5e7eb;
+    }
+
+    .resume-contact {
+      font-size: 0.78rem;
+      text-align: right;
+      color: #cbd5f5;
+    }
+
+    .resume-section-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #fbbf24;
+      margin-top: 10px;
+      margin-bottom: 4px;
+    }
+
+    .resume-list {
+      font-size: 0.8rem;
+      color: #e5e7eb;
+      list-style: disc;
+      padding-left: 18px;
+      margin: 4px 0 6px;
+    }
+
+    .resume-list li {
+      margin-bottom: 3px;
+    }
+
+    .resume-text {
+      font-size: 0.8rem;
+      color: #e5e7eb;
+      margin: 2px 0 4px;
+    }
+
+    .resume-tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .resume-tag {
+      font-size: 0.75rem;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(15, 118, 110, 0.4);
+      color: #a5f3fc;
+    }
+
+    .resume-footer-actions {
+      margin-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pdf-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.9);
+      color: #e5e7eb;
+      font-size: 0.8rem;
+      padding: 6px 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .pdf-btn span.icon {
+      font-size: 0.95rem;
+      color: #fbbf24;
+    }
+
+    .resume-hint {
+      font-size: 0.75rem;
+      color: #9ca3af;
+    }
+
+    @media (max-width: 900px) {
+      .shell {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .card {
+        padding: 20px 16px 24px;
+      }
+      .resume-card {
+        margin-top: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="shell">
+      <!-- LEFT: FORM -->
+      <div class="card">
+        <div class="header">
+          <div class="title">AI Remote Work – Resume Builder Intake</div>
+          <div class="subtitle">
+            Fill this out once—I'll turn it into a polished resume aimed at
+            <span class="fun">remote AI data annotation, evaluation & related roles</span>.
+            Tiny bonus: you get a downloadable PDF preview at the end.
+          </div>
+          <div class="pill-row">
+            <div class="pill highlight">Work From Home</div>
+            <div class="pill">AI Data Annotation</div>
+            <div class="pill">Model Evaluation</div>
+            <div class="pill">Content Rating & Labeling</div>
+            <div class="pill">Search Quality & Relevance</div>
+          </div>
+        </div>
+
+        <!-- IMPORTANT: This form uses JavaScript to:
+             1) Build a clean, organized summary for email.
+             2) Update the resume preview.
+             3) Trigger a POST to a backend endpoint (you must implement this).
+             Replace the URL in sendFormToBackend() with your actual endpoint that sends email to imeritt@merittnorth.com.
+        -->
+        <form id="ai-intake-form">
+          <!-- 1. Basic info -->
+          <div class="section">
+            <div class="section-header">
+              <div class="section-title">1. Basic information</div>
+              <div class="section-note">Resume header & contact details. <span>Zero stress, just be accurate.</span></div>
+            </div>
+            <div class="grid-2">
+              <div>
+                <label for="fullName">Full name (as you want it on your resume)</label>
+                <input type="text" id="fullName" name="fullName" required />
+              </div>
+              <div>
+                <label for="preferredName">Preferred name (optional)</label>
+                <input type="text" id="preferredName" name="preferredName" />
+              </div>
+              <div>
+                <label for="email">Best email for job contact</label>
+                <input type="email" id="email" name="email" required />
+              </div>
+              <div>
+                <label for="phone">Phone number (optional but helpful)</label>
+                <input type="tel" id="phone" name="phone" />
+              </div>
+              <div>
+                <label for="city">City & state (for resume header)</label>
+                <input type="text" id="city" name="city" placeholder="e.g., Fort Worth, TX" />
+              </div>
+              <div>
+                <label for="timezone">Time zone</label>
+                <select id="timezone" name="timezone">
+                  <option value="">Select...</option>
+                  <option>Pacific (PT)</option>
+                  <option>Mountain (MT)</option>
+                  <option>Central (CT)</option>
+                  <option>Eastern (ET)</option>
+                  <option>Other / International</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Target AI remote roles -->
+          <div class="section">
+            <div class="section-header">
+              <div class="section-title">2. Target AI remote roles</div>
+              <div class="section-note">What kind of AI work-from-home roles sound exciting?</div>
+            </div>
+            <div class="grid-2">
+              <div>
+                <label>AI-related remote roles you’re interested in (check all that apply)</label>
+                <div class="checkbox-group">
+                  <label class="checkbox-item">
+                    <input type="checkbox" name="roles" value="AI data annotation (text, images, audio)" />
+                    <span>AI data annotation (text, images, audio)</span>
+                  </label>
+                  <label class="checkbox-item">
+                    <input type="checkbox" name="roles" value="Model evaluation (rating AI responses)" />
+                    <span>Model evaluation (rating AI responses)</span>
+                  </label>
+                  <label class="checkbox-item">
+                    <input type="checkbox" name="roles" value="Search quality / relevance evaluation" />
+                    <span>Search quality / relevance evaluation</span>
+                  </label>
+                  <label class="checkbox-item">
+                    <input type="checkbox" name="roles" value="Content moderation / safety review" />
+                    <span>Content moderation / safety review</span>
+                  </label>
+                  <label class="checkbox-item">
+                    <input type="checkbox" name="roles" value="Prompt testing / UX feedback" />
+                    <span>Prompt testing / UX feedback</span>
+                  </label>
+                  <label class="checkbox-item">
+                    <input type="checkbox" name="roles" value="Other AI-related remote work" />
+                    <span>Other AI-related remote work</span>
+                  </label>
+                </div>
+              </div>
+              <div>
+                <label for="roleNotes">If you picked “Other”, or want to explain more, add it here</label>
+                <textarea id="roleNotes" name="roleNotes"
+                  placeholder="Example: I’d love to help test AI chatbots, or work on audio transcription, etc."></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Availability & work preferences -->
+          <div class="section">
+            <div class="section-header">
+              <div class="section-title">3. Availability & work preferences</div>
+              <div class="section-note">Helps me position you for the right kind of remote roles.</div>
+            </div>
+
+            <div class="grid-2">
+              <div>
+                <label>Desired schedule</label>
+                <div class="checkbox-group">
+                  <label class="checkbox-item">
+                    <input type="checkbox" name="schedule" value="Full-time" />
+                    <span>Full-time</span>
+                  </label>
+                  <label class="checkbox-item">
+                    <input type="checkbox" name="schedule" value="Part-time" />
+                    <span>Part-time</span>
+                  </label>
+                  <label class="checkbox-item">
+                    <input type="checkbox" name="schedule" value="Flexible / project-based" />
+                    <span>Flexible / project-based</span>
+                  </label>
+                </div>
+              </div>
+
+              <div>
+                <label>Typical hours you prefer</label>
+                <div class="checkbox-group">
+                  <label class="checkbox-item">
+                    <input type="checkbox" name="hours" value="Standard business hours" />
+                    <span>Standard business hours</span>
+                  </label>
+                  <label class="checkbox-item">
+                    <input type="checkbox" name="hours" value="Evenings" />
+                    <span>Evenings</span>
+                  </label>
+                  <label class="checkbox-item">
+                    <input type="checkbox" name="hours" value="Overnight" />
+                    <span>Overnight</span>
+                  </label>
+                  <label class="checkbox-item">
+                    <input type="checkbox" name="hours" value="Weekends" />
+                    <span>Weekends</span>
+                  </label>
+                </div>
+              </div>
+
+              <div>
+                <label for="startDate">When could you start?</label>
+                <select id="startDate" name="startDate">
+                  <option value="">Select...</option>
+                  <option>Immediately</option>
+                  <option>Within 2 weeks</option>
+                  <option>Within 1 month</option>
+                  <option>More than 1 month</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="workEnvironment">Ideal work environment</label>
+                <select id="workEnvironment" name="workEnvironment">
+                  <option value="">Select...</option>
+                  <option>Independent, minimal meetings</option>
+                  <option>Collaborative, frequent communication</option>
+                  <option>Mix of independent and collaborative</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="margin-top: 10px;">
+              <label for="availabilityNotes">Anything else about your availability or preferences?</label>
+              <textarea id="availabilityNotes" name="availabilityNotes"
+                placeholder="Example: I can work evenings and weekends; I prefer flexible hours; I need fully remote."></textarea>
+            </div>
+          </div>
+
+          <!-- 4. Language & communication skills -->
+          <div class="section">
+            <div class="section-header">
+              <div class="section-title">4. Language & communication skills</div>
+              <div class="section-note">These are critical for AI data annotation and evaluation roles.</div>
+            </div>
+
+            <div class="grid-2">
+              <div>
+                <label for="englishLevel">English proficiency (written & spoken)</label>
+                <select id="englishLevel" name="englishLevel" required>
+                  <option value="">Select...</option>
+                  <option>Native / bilingual</option>
+                  <option>Fluent</option>
+                  <option>Advanced</option>
+                  <option>Intermediate</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="otherLanguages">Other languages (if any)</label>
+                <input type="text" id="otherLanguages" name="otherLanguages"
+                       placeholder="e.g., Spanish (fluent), French (basic)" />
+              </div>
+
+              <div>
+                <label>Comfort with written communication</label>
+                <div class="radio-group">
+                  <label class="radio-item">
+                    <input type="radio" name="writtenComfort" value="Very comfortable" />
+                    <span>Very comfortable</span>
+                  </label>
+                  <label class="radio-item">
+                    <input type="radio" name="writtenComfort" value="Comfortable" />
+                    <span>Comfortable</span>
+                  </label>
+                  <label class="radio-item">
+                    <input type="radio" name="writtenComfort" value="Needs improvement" />
+                    <span>Needs improvement</span>
+                  </label>
+                </div>
+              </div>
+
+              <div>
+                <label>Comfort with verbal communication (calls/meetings)</label>
+                <div class="radio-group">
+                  <label class="radio-item">
+                    <input type="radio" name="verbalComfort" value="Very comfortable" />
+                    <span>Very comfortable</span>
+                  </label>
+                  <label class="radio-item">
+                    <input type="radio" name="verbalComfort" value="Comfortable" />
+                    <span>Comfortable</span>
+                  </label>
+                  <label class="radio-item">
+                    <input type="radio" name="verbalComfort" value="Prefer minimal calls" />
+                    <span>Prefer minimal calls</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top: 10px;">
+              <label for="communicationExamples">Brief examples that show your communication skills</label>
+              <textarea id="communicationExamples" name="communicationExamples"
+                placeholder="Example: I’ve written reports, handled customer emails, led meetings, tutored, etc."></textarea>
+            </div>
+          </div>
+
+          <!-- 5. Technical & digital skills -->
+          <div class="section">
+            <div class="section-header">
+              <div class="section-title">5. Technical & digital skills</div>
+              <div class="section-note">Anything that shows you can work comfortably with computers and online tools.</div>
+            </div>
+
+            <div class="grid-2">
+              <div>
+                <label for="computerComfort">Comfort level with computers</label>
+                <select id="computerComfort" name="computerComfort" required>
+                  <option value="">Select...</option>
+                  <option>Very comfortable</option>
+                  <option>Comfortable</option>
+                  <option>Basic</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="typingSpeed">Typing speed (if known)</label>
+                <input type="text" id="typingSpeed" name="typingSpeed"
+                       placeholder="e.g., 60 WPM, or 'not sure but fairly fast'" />
+              </div>
+
+              <div>
+                <label>Devices you can use for work</label>
+                <div class="checkbox-group">
+                  <label class="checkbox-item">
+                    <input type="checkbox" name="devices" value="Desktop computer" />
+                    <span>Desktop computer</span>
+                  </label>
+                  <label class="checkbox-item">
+                    <input type="checkbox" name="devices" value="Laptop" />
+                    <span>Laptop</span>
+                  </label>
+                  <label class="checkbox-item">
+                    <input type="checkbox" name="devices" value="Tablet" />
+                    <span>Tablet</span>
+                  </label>
+                  <label class="checkbox-item">
+                    <input type="checkbox" name="devices" value="Smartphone (backup only)" />
+                    <span>Smartphone (backup only)</span>
+                  </label>
+                </div>
+              </div>
+
+              <div>
+                <label>Familiar tools & platforms</label>
+                <div class="checkbox-group">
+                  <label class="checkbox-item">
+                    <input type="checkbox" name="tools" value="Google Docs / Microsoft Word" />
+                    <span>Google Docs / Microsoft Word</span>
+                  </label>
+                  <label class="checkbox-item">
+                    <input type="checkbox" name="tools" value="Spreadsheets (Excel / Google Sheets)" />
+                    <span>Spreadsheets (Excel / Google Sheets)</span>
+                  </label>
+                  <label class="checkbox-item">
+                    <input type="checkbox" name="tools" value="Task tools (Trello, Asana, etc.)" />
+                    <span>Task tools (Trello, Asana, etc.)</span>
+                  </label>
+                  <label class="checkbox-item">
+                    <input type="checkbox" name="tools" value="Chat tools (Slack, Teams, etc.)" />
+                    <span>Chat tools (Slack, Teams, etc.)</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top: 10px;">
+              <label for="otherTechSkills">Other technical/digital skills (anything you’re comfortable with)</label>
+              <textarea id="otherTechSkills" name="otherTechSkills"
+                placeholder="Example: basic HTML, social media management, simple design tools, CRM systems, etc."></textarea>
+            </div>
+          </div>
+
+          <!-- 6. AI / annotation-related strengths -->
+          <div class="section">
+            <div class="section-header">
+              <div class="section-title">6. AI & annotation-related strengths</div>
+              <div class="section-note">These map directly to the kind of work you’ll be doing.</div>
+            </div>
+
+            <div class="grid-2">
+              <div>
+                <label>Which of these describe you? (check all that fit)</label>
+                <div class="checkbox-group">
+                  <label class="checkbox-item">
+                    <input type="checkbox" name="aiStrengths" value="Detail-oriented" />
+                    <span>Detail-oriented</span>
+                  </label>
+                  <label class="checkbox-item">
+                    <input type="checkbox" name="aiStrengths" value="Patient with repetitive tasks" />
+                    <span>Patient with repetitive tasks</span>
+                  </label>
+                  <label class="checkbox-item">
+                    <input type="checkbox" name="aiStrengths" value="Good at following instructions" />
+                    <span>Good at following instructions</span>
+                  </label>
+                  <label class="checkbox-item">
+                    <input type="checkbox" name="aiStrengths" value="Comfortable giving written feedback" />
+                    <span>Comfortable giving written feedback</span>
+                  </label>
+                  <label class="checkbox-item">
+                    <input type="checkbox" name="aiStrengths" value="Able to stay focused for long periods" />
+                    <span>Able to stay focused for long periods</span>
+                  </label>
+                </div>
+              </div>
+
+              <div>
+                <label>Comfort with rating or judging content</label>
+                <div class="radio-group">
+                  <label class="radio-item">
+                    <input type="radio" name="ratingComfort" value="Very comfortable" />
+                    <span>Very comfortable</span>
+                  </label>
+                  <label class="radio-item">
+                    <input type="radio" name="ratingComfort" value="Comfortable" />
+                    <span>Comfortable</span>
+                  </label>
+                  <label class="radio-item">
+                    <input type="radio" name="ratingComfort" value="Unsure" />
+                    <span>Unsure</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top: 10px;">
+              <label for="aiExperience">Any experience with AI tools (even casual)?</label>
+              <textarea id="aiExperience" name="aiExperience"
+                placeholder="Example: used ChatGPT, image generators, voice assistants, or done any kind of labeling/rating work."></textarea>
+            </div>
+          </div>
+
+          <!-- 7. Soft skills & personality strengths -->
+          <div class="section">
+            <div class="section-header">
+              <div class="section-title">7. Soft skills & personality strengths</div>
+              <div class="section-note">These help your resume stand out even without direct AI experience.</div>
+            </div>
+
+            <div class="grid-2">
+              <div>
+                <label>Soft skills that fit you (check all that apply)</label>
+                <div class="checkbox-group">
+                  <label class="checkbox-item">
+                    <input type="checkbox" name="softSkills" value="Reliable / dependable" />
+                    <span>Reliable / dependable</span>
+                  </label>
+                  <label class="checkbox-item">
+                    <input type="checkbox" name="softSkills" value="Organized" />
+                    <span>Organized</span>
+                  </label>
+                  <label class="checkbox-item">
+                    <input type="checkbox" name="softSkills" value="Self-motivated" />
+                    <span>Self-motivated</span>
+                  </label>
+                  <label class="checkbox-item">
+                    <input type="checkbox" name="softSkills" value="Quick learner" />
+                    <span>Quick learner</span>
+                  </label>
+                  <label class="checkbox-item">
+                    <input type="checkbox" name="softSkills" value="Problem solver" />
+                    <span>Problem solver</span>
+                  </label>
+                  <label class="checkbox-item">
+                    <input type="checkbox" name="softSkills" value="Empathetic / good with people" />
+                    <span>Empathetic / good with people</span>
+                  </label>
+                </div>
+              </div>
+
+              <div>
+                <label for="topStrengths">In your own words, what are your top 3 strengths?</label>
+                <textarea id="topStrengths" name="topStrengths"
+                  placeholder="Example: I’m calm under pressure, I notice small details, I’m good at explaining things."></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- 8. Education & training -->
+          <div class="section">
+            <div class="section-header">
+              <div class="section-title">8. Education & training</div>
+              <div class="section-note">Doesn’t have to be formal—anything that shows learning and commitment.</div>
+            </div>
+
+            <div class="grid-2">
+              <div>
+                <label for="highestEducation">Highest level of education</label>
+                <select id="highestEducation" name="highestEducation">
+                  <option value="">Select...</option>
+                  <option>Some high school</option>
+                  <option>High school diploma / GED</option>
+                  <option>Some college</option>
+                  <option>Associate degree</option>
+                  <option>Bachelor’s degree</option>
+                  <option>Master’s degree or higher</option>
+                  <option>Trade / vocational program</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="educationDetails">School(s), program(s), or relevant courses</label>
+                <textarea id="educationDetails" name="educationDetails"
+                  placeholder="Example: School name, program, any classes that show writing, analysis, or tech comfort."></textarea>
+              </div>
+            </div>
+
+            <div style="margin-top: 10px;">
+              <label for="certifications">Certifications, trainings, or online courses</label>
+              <textarea id="certifications" name="certifications"
+                placeholder="Example: online courses, workshops, certificates—even if they’re not AI-specific."></textarea>
+            </div>
+          </div>
+
+          <!-- 9. Work history & experience -->
+          <div class="section">
+            <div class="section-header">
+              <div class="section-title">9. Work history & experience</div>
+              <div class="section-note">I’ll translate this into strong bullet points for your resume.</div>
+            </div>
+
+            <div>
+              <label for="recentJobs">Recent jobs or roles (paid or unpaid)</label>
+              <textarea id="recentJobs" name="recentJobs"
+                placeholder="For each role, list: job title, company, dates, and what you did day-to-day."></textarea>
+              <div class="hint fun">
+                No formal jobs? Totally fine. List responsibilities you’ve had (family, volunteering, projects, etc.).
+              </div>
+            </div>
+
+            <div style="margin-top: 10px;">
+              <label for="accomplishments">Accomplishments you’re proud of</label>
+              <textarea id="accomplishments" name="accomplishments"
+                placeholder="Example: handled a lot of customers, learned a new system quickly, managed schedules, helped someone improve, etc."></textarea>
+            </div>
+          </div>
+
+          <!-- 10. Portfolio, links & extras -->
+          <div class="section">
+            <div class="section-header">
+              <div class="section-title">10. Links & anything else</div>
+              <div class="section-note">Optional, but helpful if you have anything online.</div>
+            </div>
+
+            <div class="grid-2">
+              <div>
+                <label for="onlineProfiles">LinkedIn or other professional profiles (if any)</label>
+                <input type="text" id="onlineProfiles" name="onlineProfiles"
+                       placeholder="Paste any links here." />
+              </div>
+
+              <div>
+                <label for="portfolioLinks">Portfolio, writing samples, or projects (if any)</label>
+                <input type="text" id="portfolioLinks" name="portfolioLinks"
+                       placeholder="Links to anything that shows your skills." />
+              </div>
+            </div>
+
+            <div style="margin-top: 10px;">
+              <label for="anythingElse">Anything else you want me to know</label>
+              <textarea id="anythingElse" name="anythingElse"
+                placeholder="Anything that doesn’t fit above but matters for how I present you."></textarea>
+            </div>
+          </div>
+
+          <!-- Footer / submit -->
+          <div class="footer">
+            <div class="submit-row">
+              <button type="submit" class="submit-btn">
+                <span class="icon">✨</span>
+                <span>Submit & send to Krystle</span>
+              </button>
+              <div id="successMessage" class="success-message">
+                <span class="icon">✅</span>
+                <span>Got it! Your answers were captured, and your resume preview is ready.</span>
+              </div>
+            </div>
+            <div class="small-note">
+              After you submit, I’ll receive a clean, organized summary of your answers and use it to craft your AI-focused resume.
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- RIGHT: LIVE RESUME PREVIEW -->
+      <div class="resume-card" id="resumeCard">
+        <div class="resume-inner">
+          <div class="resume-header">
+            <div>
+              <div class="resume-name" id="resumeName">Your Name</div>
+              <div class="resume-role" id="resumeRole">Remote AI Data Annotation & Evaluation Specialist</div>
+            </div>
+            <div class="resume-contact" id="resumeContact">
+              email@example.com<br />
+              (555) 555-5555<br />
+              City, State · Time zone
+            </div>
+          </div>
+
+          <div class="resume-section-title">Profile</div>
+          <div class="resume-text" id="resumeProfile">
+            Detail-oriented, tech-comfortable professional targeting remote AI data annotation, model evaluation, and content
+            quality roles. Strong written communication, reliable work habits, and the ability to follow detailed guidelines
+            while maintaining consistency over time.
+          </div>
+
+          <div class="resume-section-title">Core AI-Focused Skills</div>
+          <ul class="resume-list" id="resumeSkills">
+            <li>Data annotation (text, images, and/or audio) with high attention to detail</li>
+            <li>Evaluation and rating of AI-generated responses for quality and relevance</li>
+            <li>Comfort with written feedback and structured guidelines</li>
+            <li>Strong English language skills (written and spoken)</li>
+          </ul>
+
+          <div class="resume-section-title">Technical & Digital Skills</div>
+          <div class="resume-tag-row" id="resumeTechTags">
+            <span class="resume-tag">Computer-literate</span>
+            <span class="resume-tag">Online productivity tools</span>
+            <span class="resume-tag">Remote collaboration</span>
+          </div>
+
+          <div class="resume-section-title">Soft Skills</div>
+          <ul class="resume-list" id="resumeSoftSkills">
+            <li>Reliable and self-motivated</li>
+            <li>Organized and able to manage tasks independently</li>
+            <li>Quick learner with strong problem-solving mindset</li>
+          </ul>
+
+          <div class="resume-section-title">Experience Highlights</div>
+          <div class="resume-text" id="resumeExperience">
+            Experience details will be built from your answers—covering previous roles, responsibilities, and accomplishments
+            that show reliability, communication, and comfort with structured tasks.
+          </div>
+
+          <div class="resume-section-title">Education & Training</div>
+          <div class="resume-text" id="resumeEducation">
+            Education and training will be summarized here, including formal schooling and any relevant courses or certifications.
+          </div>
+
+          <div class="resume-footer-actions">
+            <button type="button" class="pdf-btn" id="pdfBtn">
+              <span class="icon">📄</span>
+              <span>Download PDF (Print view)</span>
+            </button>
+            <div class="resume-hint">
+              Tip: Use “Save as PDF” in the print dialog to keep a copy of this resume.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Helper: get all values from checkboxes with same name
+    function getCheckedValues(name) {
+      return Array.from(document.querySelectorAll('input[name="' + name + '"]:checked'))
+        .map(function (el) { return el.value; });
+    }
+
+    // Build a clean, organized summary of all answers for email/backend
+    function buildSummary(formData) {
+      function list(arr) {
+        return arr.length ? arr.join(", ") : "N/A";
+      }
+
+      var summary = "";
+      summary += "=== BASIC INFORMATION ===\n";
+      summary += "Full name: " + (formData.fullName || "N/A") + "\n";
+      summary += "Preferred name: " + (formData.preferredName || "N/A") + "\n";
+      summary += "Email: " + (formData.email || "N/A") + "\n";
+      summary += "Phone: " + (formData.phone || "N/A") + "\n";
+      summary += "City & state: " + (formData.city || "N/A") + "\n";
+      summary += "Time zone: " + (formData.timezone || "N/A") + "\n\n";
+
+      summary += "=== TARGET AI REMOTE ROLES ===\n";
+      summary += "Roles of interest: " + list(formData.roles || []) + "\n";
+      summary += "Notes: " + (formData.roleNotes || "N/A") + "\n\n";
+
+      summary += "=== AVAILABILITY & PREFERENCES ===\n";
+      summary += "Desired schedule: " + list(formData.schedule || []) + "\n";
+      summary += "Preferred hours: " + list(formData.hours || []) + "\n";
+      summary += "Earliest start: " + (formData.startDate || "N/A") + "\n";
+      summary += "Ideal work environment: " + (formData.workEnvironment || "N/A") + "\n";
+      summary += "Availability notes: " + (formData.availabilityNotes || "N/A") + "\n\n";
+
+      summary += "=== LANGUAGE & COMMUNICATION ===\n";
+      summary += "English proficiency: " + (formData.englishLevel || "N/A") + "\n";
+      summary += "Other languages: " + (formData.otherLanguages || "N/A") + "\n";
+      summary += "Written communication comfort: " + (formData.writtenComfort || "N/A") + "\n";
+      summary += "Verbal communication comfort: " + (formData.verbalComfort || "N/A") + "\n";
+      summary += "Communication examples: " + (formData.communicationExamples || "N/A") + "\n\n";
+
+      summary += "=== TECH & DIGITAL SKILLS ===\n";
+      summary += "Computer comfort level: " + (formData.computerComfort || "N/A") + "\n";
+      summary += "Typing speed: " + (formData.typingSpeed || "N/A") + "\n";
+      summary += "Devices: " + list(formData.devices || []) + "\n";
+      summary += "Tools/platforms: " + list(formData.tools || []) + "\n";
+      summary += "Other technical skills: " + (formData.otherTechSkills || "N/A") + "\n\n";
+
+      summary += "=== AI & ANNOTATION STRENGTHS ===\n";
+      summary += "Strengths: " + list(formData.aiStrengths || []) + "\n";
+      summary += "Content rating comfort: " + (formData.ratingComfort || "N/A") + "\n";
+      summary += "AI experience: " + (formData.aiExperience || "N/A") + "\n\n";
+
+      summary += "=== SOFT SKILLS & PERSONALITY ===\n";
+      summary += "Soft skills: " + list(formData.softSkills || []) + "\n";
+      summary += "Top strengths (self-described): " + (formData.topStrengths || "N/A") + "\n\n";
+
+      summary += "=== EDUCATION & TRAINING ===\n";
+      summary += "Highest education: " + (formData.highestEducation || "N/A") + "\n";
+      summary += "Education details: " + (formData.educationDetails || "N/A") + "\n";
+      summary += "Certifications / trainings: " + (formData.certifications || "N/A") + "\n\n";
+
+      summary += "=== WORK HISTORY & EXPERIENCE ===\n";
+      summary += "Recent jobs / roles: " + (formData.recentJobs || "N/A") + "\n";
+      summary += "Accomplishments: " + (formData.accomplishments || "N/A") + "\n\n";
+
+      summary += "=== LINKS & EXTRAS ===\n";
+      summary += "Professional links: " + (formData.onlineProfiles || "N/A") + "\n";
+      summary += "Portfolio / samples: " + (formData.portfolioLinks || "N/A") + "\n";
+      summary += "Additional notes: " + (formData.anythingElse || "N/A") + "\n";
+
+      return summary;
+    }
+
+    // Update resume preview based on key fields
+    function updateResumePreview(formData) {
+      var name = formData.fullName || "Your Name";
+      var city = formData.city || "";
+      var tz = formData.timezone || "";
+      var email = formData.email || "email@example.com";
+      var phone = formData.phone || "(phone optional)";
+
+      document.getElementById("resumeName").textContent = name;
+
+      // Role line based on selected roles
+      var roles = formData.roles || [];
+      var roleLine = "Remote AI Data Annotation & Evaluation Specialist";
+      if (roles.length) {
+        roleLine = "Remote " + roles.join(" · ");
+      }
+      document.getElementById("resumeRole").textContent = roleLine;
+
+      var contactText = email + "\n" + phone + "\n";
+      if (city || tz) {
+        contactText += (city || "") + (city && tz ? " · " : "") + (tz || "");
+      }
+      document.getElementById("resumeContact").textContent = contactText;
+
+      // Profile
+      var english = formData.englishLevel || "strong";
+      var profile = name + " is targeting remote AI data annotation, evaluation, and related roles. ";
+      profile += "Brings " + english.toLowerCase() + " English skills, comfort with structured tasks, and the ability to follow detailed guidelines while maintaining consistency over time.";
+      document.getElementById("resumeProfile").textContent = profile;
+
+      // Core AI skills list
+      var skillsList = document.getElementById("resumeSkills");
+      skillsList.innerHTML = "";
+      var coreSkills = [];
+
+      if ((formData.aiStrengths || []).length) {
+        coreSkills = coreSkills.concat(formData.aiStrengths);
+      } else {
+        coreSkills.push("Detail-oriented and comfortable with repetitive, structured tasks");
+      }
+
+      coreSkills.push("Evaluation and rating of AI-generated responses for quality and relevance");
+      coreSkills.push("Ability to follow annotation guidelines and provide clear written feedback");
+      coreSkills.push("Comfort working independently in remote environments");
+
+      coreSkills.forEach(function (s) {
+        var li = document.createElement("li");
+        li.textContent = s;
+        skillsList.appendChild(li);
+      });
+
+      // Tech tags
+      var techTags = document.getElementById("resumeTechTags");
+      techTags.innerHTML = "";
+      var techList = [];
+
+      if (formData.computerComfort) techList.push(formData.computerComfort + " with computers");
+      if ((formData.tools || []).length) techList = techList.concat(formData.tools);
+      if ((formData.devices || []).length) techList = techList.concat(formData.devices);
+
+      if (!techList.length) {
+        techList = ["Computer-literate", "Online productivity tools", "Remote collaboration"];
+      }
+
+      techList.forEach(function (t) {
+        var span = document.createElement("span");
+        span.className = "resume-tag";
+        span.textContent = t;
+        techTags.appendChild(span);
+      });
+
+      // Soft skills
+      var softListEl = document.getElementById("resumeSoftSkills");
+      softListEl.innerHTML = "";
+      var softList = formData.softSkills || [];
+      if (!softList.length) {
+        softList = ["Reliable and self-motivated", "Organized and able to manage tasks independently", "Quick learner with strong problem-solving mindset"];
+      }
+      softList.forEach(function (s) {
+        var li = document.createElement("li");
+        li.textContent = s;
+        softListEl.appendChild(li);
+      });
+
+      // Experience
+      var expText = formData.recentJobs || "";
+      if (!expText.trim()) {
+        expText = "Experience details will be built from your answers—covering previous roles, responsibilities, and accomplishments that show reliability, communication, and comfort with structured tasks.";
+      }
+      document.getElementById("resumeExperience").textContent = expText;
+
+      // Education
+      var eduText = "";
+      if (formData.highestEducation) {
+        eduText += "Highest education: " + formData.highestEducation + ". ";
+      }
+      if (formData.educationDetails) {
+        eduText += formData.educationDetails + " ";
+      }
+      if (formData.certifications) {
+        eduText += "Additional training/certifications: " + formData.certifications;
+      }
+      if (!eduText.trim()) {
+        eduText = "Education and training will be summarized here, including formal schooling and any relevant courses or certifications.";
+      }
+      document.getElementById("resumeEducation").textContent = eduText;
+    }
+
+    // Send form data to backend (you must implement the endpoint to email results to imeritt@merittnorth.com)
+    function sendFormToBackend(payload) {
+      // Replace this URL with your actual backend endpoint.
+      // That backend should take 'summary' and 'raw' and send an email to imeritt@merittnorth.com.
+      var url = "https://your-backend-endpoint.example.com/ai-intake-submit";
+
+      // This fetch will fail unless you implement the endpoint.
+      // It’s here as the wiring you can hook into.
+      fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      }).catch(function () {
+        // Silent catch; you can add logging if needed.
+      });
+    }
+
+    // Handle form submit
+    document.getElementById("ai-intake-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      var form = e.target;
+      var formData = {
+        fullName: form.fullName.value.trim(),
+        preferredName: form.preferredName.value.trim(),
+        email: form.email.value.trim(),
+        phone: form.phone.value.trim(),
+        city: form.city.value.trim(),
+        timezone: form.timezone.value,
+
+        roles: getCheckedValues("roles"),
+        roleNotes: form.roleNotes.value.trim(),
+
+        schedule: getCheckedValues("schedule"),
+        hours: getCheckedValues("hours"),
+        startDate: form.startDate.value,
+        workEnvironment: form.workEnvironment.value,
+        availabilityNotes: form.availabilityNotes.value.trim(),
+
+        englishLevel: form.englishLevel.value,
+        otherLanguages: form.otherLanguages.value.trim(),
+        writtenComfort: (form.writtenComfort.value || ""),
+        verbalComfort: (form.verbalComfort.value || ""),
+        communicationExamples: form.communicationExamples.value.trim(),
+
+        computerComfort: form.computerComfort.value,
+        typingSpeed: form.typingSpeed.value.trim(),
+        devices: getCheckedValues("devices"),
+        tools: getCheckedValues("tools"),
+        otherTechSkills: form.otherTechSkills.value.trim(),
+
+        aiStrengths: getCheckedValues("aiStrengths"),
+        ratingComfort: (form.ratingComfort.value || ""),
+        aiExperience: form.aiExperience.value.trim(),
+
+        softSkills: getCheckedValues("softSkills"),
+        topStrengths: form.topStrengths.value.trim(),
+
+        highestEducation: form.highestEducation.value,
+        educationDetails: form.educationDetails.value.trim(),
+        certifications: form.certifications.value.trim(),
+
+        recentJobs: form.recentJobs.value.trim(),
+        accomplishments: form.accomplishments.value.trim(),
+
+        onlineProfiles: form.onlineProfiles.value.trim(),
+        portfolioLinks: form.portfolioLinks.value.trim(),
+        anythingElse: form.anythingElse.value.trim()
+      };
+
+      var summary = buildSummary(formData);
+
+      // Update resume preview
+      updateResumePreview(formData);
+
+      // Send to backend (for emailing to you)
+      sendFormToBackend({
+        summary: summary,
+        raw: formData
+      });
+
+      // Show success message
+      var msg = document.getElementById("successMessage");
+      msg.classList.add("visible");
+    });
+
+    // PDF download via print dialog
+    document.getElementById("pdfBtn").addEventListener("click", function () {
+      window.print();
+    });
+  </script>
+</body>
+</html>
