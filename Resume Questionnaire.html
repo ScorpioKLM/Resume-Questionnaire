@@ -1251,12 +1251,13 @@
 
     // Send form data to backend (you must implement the endpoint to email results to imeritt@merittnorth.com)
     function sendFormToBackend(payload) {
-      // Replace this URL with your actual backend endpoint.
-      // That backend should take 'summary' and 'raw' and send an email to imeritt@merittnorth.com.
-      var url = "https://your-backend-endpoint.example.com/ai-intake-submit";
+      // Configure this in the browser before submit:
+      // window.AI_INTAKE_ENDPOINT = "https://your-real-endpoint.com/ai-intake-submit";
+      var url = (window.AI_INTAKE_ENDPOINT || "").trim();
+      if (!url || url.indexOf("your-backend-endpoint.example.com") !== -1) {
+        return;
+      }
 
-      // This fetch will fail unless you implement the endpoint.
-      // It’s here as the wiring you can hook into.
       fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
